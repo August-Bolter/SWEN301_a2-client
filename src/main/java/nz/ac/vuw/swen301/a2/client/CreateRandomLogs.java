@@ -11,9 +11,6 @@ import java.nio.charset.Charset;
 import java.util.Random;
 
 public class CreateRandomLogs {
-    enum levels { //All possible levels a log could have (ordered by priority)
-        OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL
-    }
 
     public static void main(String[] args) throws InterruptedException {
         //Test code
@@ -32,29 +29,36 @@ public class CreateRandomLogs {
             String message = generatedString;
 
             Random rand = new Random();
-            int randomNum = rand.nextInt((7-0)+1);
+            int randomNum = rand.nextInt(8);
             Level level = null;
             switch(randomNum) {
                 case 0 :
                     level = Level.OFF;
+                    break;
                 case 1 :
                     level = Level.FATAL;
+                    break;
                 case 2 :
                     level = Level.ERROR;
+                    break;
                 case 3 :
                     level = Level.WARN;
+                    break;
                 case 4 :
                     level = Level.INFO;
+                    break;
                 case 5 :
                     level = Level.DEBUG;
+                    break;
                 case 6 :
                     level = Level.TRACE;
+                    break;
                 case 7 :
                     level = Level.ALL;
             }
-            LoggingEvent event = null;
-            if (level != Level.ERROR && level != level.ALL) {
-                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), 5000, level, message, "main", null, "", null, null);
+            LoggingEvent event;
+            if (level != Level.ERROR && level != Level.ALL) {
+                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), 5010, level, message, "main", null, "", null, null);
             }
             else {
                 String[] info = new String[4];
