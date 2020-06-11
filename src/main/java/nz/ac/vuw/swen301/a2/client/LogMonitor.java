@@ -32,14 +32,15 @@ public class LogMonitor extends JFrame implements ActionListener {
         LogMonitor monitor = new LogMonitor();
     }
     public LogMonitor() {
-        setVisible(true);
         setTitle("Log Monitor");
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension newDi = new Dimension((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         setSize((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         overallPanelSetup();
         createFilterSection();
         createLogTable("ALL", "20");
         add(overallPanel);
+        setVisible(true);
         revalidate();
         repaint();
     }
@@ -70,18 +71,15 @@ public class LogMonitor extends JFrame implements ActionListener {
         };
         JTable logs = new JTable(logsLayout);
         Dimension tableDim = new Dimension((int) Math.round(screenSize.width*0.98), (int) Math.round(screenSize.height*0.74));
-        logs.setPreferredSize(tableDim);
-        logs.setMaximumSize(tableDim);
-        logs.setMinimumSize(tableDim);
         logs.setFont(new Font("Serif", Font.PLAIN, 15));
+        c.weightx = 1;
+        c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
         c.gridheight = 2;
         JScrollPane pane = new JScrollPane(logs);
-        pane.setPreferredSize(tableDim);
-        pane.setMaximumSize(tableDim);
-        pane.setMinimumSize(tableDim);
         overallPanel.add(pane, c);
     }
 
@@ -148,7 +146,6 @@ public class LogMonitor extends JFrame implements ActionListener {
         JPanel filterPanel = new JPanel();
         Dimension panelDim = new Dimension((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.06));
         filterPanel.setPreferredSize(panelDim);
-        filterPanel.setMaximumSize(panelDim);
         filterPanel.setMinimumSize(panelDim);
         filterPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         /* Creating min level drop down menu and label */
@@ -160,7 +157,6 @@ public class LogMonitor extends JFrame implements ActionListener {
         limitField = new JTextField("20");
         Dimension fieldDimension = new Dimension((int) Math.round(screenSize.width*0.06), (int) Math.round(screenSize.height*0.02));
         limitField.setPreferredSize(fieldDimension);
-        limitField.setMaximumSize(fieldDimension);
         limitField.setMinimumSize(fieldDimension);
         /* Creating submit button */
         submit = new JButton("Fetch Data");
