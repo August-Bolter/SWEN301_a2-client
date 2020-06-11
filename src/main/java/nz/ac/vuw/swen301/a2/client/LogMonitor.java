@@ -38,7 +38,7 @@ public class LogMonitor extends JFrame implements ActionListener {
         setSize((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         overallPanelSetup();
         createFilterSection();
-        createLogTable("OFF", "5");
+        createLogTable("ALL", "20");
         add(overallPanel);
         revalidate();
         repaint();
@@ -59,8 +59,8 @@ public class LogMonitor extends JFrame implements ActionListener {
             e.printStackTrace();
         }
         Object[][] data = null;
-        if (dataString != null && dataString.length() != 0) {
-            data = transformString(dataString, "5");
+        if (dataString != null && dataString.length() != 0 && (dataString.startsWith("{") || dataString.startsWith("["))) {
+            data = transformString(dataString);
         }
         DefaultTableModel logsLayout = new DefaultTableModel(data, columnNames) {
             @Override
@@ -85,7 +85,7 @@ public class LogMonitor extends JFrame implements ActionListener {
         overallPanel.add(pane, c);
     }
 
-    private Object[][] transformString(String dataString, String limit) {
+    private Object[][] transformString(String dataString) {
         Gson g = new Gson();
         JsonArray logArray = null;
         JsonObject logObj = null;
@@ -153,11 +153,11 @@ public class LogMonitor extends JFrame implements ActionListener {
         filterPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         /* Creating min level drop down menu and label */
         JLabel minLevelLabel = new JLabel("Min Level:");
-        String[] levels = {"OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"};
+        String[] levels = {"ALL", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"};
         minLevel = new JComboBox(levels);
         /* Creating limit label and text field */
         JLabel limitLabel = new JLabel("Limit:");
-        limitField = new JTextField("5");
+        limitField = new JTextField("20");
         Dimension fieldDimension = new Dimension((int) Math.round(screenSize.width*0.06), (int) Math.round(screenSize.height*0.02));
         limitField.setPreferredSize(fieldDimension);
         limitField.setMaximumSize(fieldDimension);

@@ -9,6 +9,7 @@ import org.apache.log4j.spi.ThrowableInformation;
 
 import java.nio.charset.Charset;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CreateRandomLogs {
 
@@ -57,14 +58,15 @@ public class CreateRandomLogs {
                     level = Level.ALL;
             }
             LoggingEvent event;
+            long limit = Integer.MAX_VALUE;
             if (level != Level.ERROR) {
-                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), 5010, level, message, "main", null, "", null, null);
+                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), ThreadLocalRandom.current().nextLong(limit), level, message, "main", null, "", null, null);
             }
             else {
                 String[] info = new String[4];
                 info[1] = "AHHH There is an error";
                 ThrowableInformation throwable = new ThrowableInformation(info);
-                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), 5000, level, message, "main", throwable, "", null, null);
+                event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), ThreadLocalRandom.current().nextLong(limit), level, message, "main", throwable, "", null, null);
             }
             //Test code
             appender.append(event);
