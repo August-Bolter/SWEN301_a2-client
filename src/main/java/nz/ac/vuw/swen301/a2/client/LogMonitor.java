@@ -35,11 +35,12 @@ public class LogMonitor extends JFrame implements ActionListener {
         setTitle("Log Monitor");
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension newDi = new Dimension((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
-        setSize((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         overallPanelSetup();
         createFilterSection();
         createLogTable("ALL", "20");
         add(overallPanel);
+        pack();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
         revalidate();
         repaint();

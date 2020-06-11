@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -64,7 +65,8 @@ public class Resthome4LogsAppender extends AppenderSkeleton {
             newObj.addProperty("logger", loggingEvent.getFQNOfLoggerClass());
             newObj.addProperty("level", loggingEvent.getLevel().toString());
             if (loggingEvent.getThrowableInformation() != null) {
-                newObj.addProperty("errorDetails", loggingEvent.getThrowableInformation().toString());
+                String[] errorInfo = loggingEvent.getThrowableInformation().getThrowableStrRep();
+                newObj.addProperty("errorDetails", errorInfo[1]);
             }
             Gson g = new Gson();
             HttpClient httpClient = HttpClientBuilder.create().build();
