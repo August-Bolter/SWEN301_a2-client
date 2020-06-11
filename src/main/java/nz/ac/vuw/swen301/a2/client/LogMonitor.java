@@ -10,7 +10,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Level;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -24,11 +23,10 @@ import java.net.URISyntaxException;
 public class LogMonitor extends JFrame implements ActionListener {
     private Dimension screenSize;
     private JButton submit;
-    JPanel overallPanel;
-    GridBagConstraints c;
-    private JPanel[][] panels;
-    private int tablewidth = 7;
-    private int tableheight = 10000;
+    private JPanel overallPanel;
+    private GridBagConstraints c;
+    private JComboBox minLevel;
+    private JTextField limitField;
 
     public static void main(String[] args) {
         LogMonitor monitor = new LogMonitor();
@@ -40,7 +38,7 @@ public class LogMonitor extends JFrame implements ActionListener {
         setSize((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         overallPanelSetup();
         createFilterSection();
-        createLogTable();
+        createLogTable("OFF", "5");
         add(overallPanel);
         revalidate();
         repaint();
@@ -52,11 +50,11 @@ public class LogMonitor extends JFrame implements ActionListener {
         c = new GridBagConstraints();
     }
 
-    private void createLogTable() {
+    private void createLogTable(String level, String limit) {
         String[] columnNames = {"ID", "Message", "Timestamp", "Thread", "Logger", "Level", "Error Details"};
         String dataString = null;
         try {
-            dataString = fetchData("OFF", "5");
+            dataString = fetchData(level, limit);
         } catch (URISyntaxException | IOException e) {
             e.printStackTrace();
         }
@@ -75,14 +73,7 @@ public class LogMonitor extends JFrame implements ActionListener {
         logs.setPreferredSize(tableDim);
         logs.setMaximumSize(tableDim);
         logs.setMinimumSize(tableDim);
-        logs.setFont(new Font("Serif", Font.PLAIN, 16));
-        panels = new JPanel[tableheight][tablewidth]; //Creating table structure
-        for (int row = 0; row < 7; row++) { //Adding panels to table
-            for (int col = 0; col < 7; col++) {
-                JPanel p = new JPanel();
-                panels[row][col] = p;
-            }
-        }
+        logs.setFont(new Font("Serif", Font.PLAIN, 15));
         c.gridx = 0;
         c.gridy = 1;
         c.gridwidth = 1;
@@ -163,10 +154,10 @@ public class LogMonitor extends JFrame implements ActionListener {
         /* Creating min level drop down menu and label */
         JLabel minLevelLabel = new JLabel("Min Level:");
         String[] levels = {"OFF", "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE", "ALL"};
-        JComboBox minLevel = new JComboBox(levels);
+        minLevel = new JComboBox(levels);
         /* Creating limit label and text field */
         JLabel limitLabel = new JLabel("Limit:");
-        JTextField limitField = new JTextField("5");
+        limitField = new JTextField("5");
         Dimension fieldDimension = new Dimension((int) Math.round(screenSize.width*0.06), (int) Math.round(screenSize.height*0.02));
         limitField.setPreferredSize(fieldDimension);
         limitField.setMaximumSize(fieldDimension);
@@ -191,7 +182,12 @@ public class LogMonitor extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(submit)) {
-            //HTTP GET
+            overallPanel.remove(1);
+            String level = (String) minLevel.getSelectedItem();
+            String limit = limitField.getText();
+            createLogTable(level, limit);
+            revalidate();
+            repaint();
         }
     }
 }
