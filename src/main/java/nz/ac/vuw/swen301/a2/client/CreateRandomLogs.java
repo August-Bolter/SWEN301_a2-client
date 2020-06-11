@@ -57,7 +57,7 @@ public class CreateRandomLogs {
                     level = Level.ALL;
             }
             LoggingEvent event;
-            if (level != Level.ERROR && level != Level.ALL) {
+            if (level != Level.ERROR) {
                 event = new LoggingEvent("foo", Logger.getLogger(JsonObject.class), 5010, level, message, "main", null, "", null, null);
             }
             else {
