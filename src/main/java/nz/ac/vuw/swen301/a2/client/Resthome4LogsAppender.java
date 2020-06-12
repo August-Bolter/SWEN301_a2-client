@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 public class Resthome4LogsAppender extends AppenderSkeleton {
