@@ -25,16 +25,15 @@ public class LogMonitor extends JFrame implements ActionListener {
     private JButton submit;
     private JPanel overallPanel;
     private GridBagConstraints c;
-    private JComboBox minLevel;
+    private JComboBox<String> minLevel;
     private JTextField limitField;
 
     public static void main(String[] args) {
-        LogMonitor monitor = new LogMonitor();
+        new LogMonitor();
     }
     public LogMonitor() {
         setTitle("Log Monitor");
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension newDi = new Dimension((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.80));
         overallPanelSetup();
         createFilterSection();
         createLogTable("ALL", "20");
@@ -71,7 +70,6 @@ public class LogMonitor extends JFrame implements ActionListener {
             }
         };
         JTable logs = new JTable(logsLayout);
-        Dimension tableDim = new Dimension((int) Math.round(screenSize.width*0.98), (int) Math.round(screenSize.height*0.74));
         logs.setFont(new Font("Serif", Font.PLAIN, 15));
         c.weightx = 1;
         c.weighty = 1;
@@ -88,7 +86,7 @@ public class LogMonitor extends JFrame implements ActionListener {
         Gson g = new Gson();
         JsonArray logArray = null;
         JsonObject logObj = null;
-        int logNum = 0;
+        int logNum;
         if (dataString.startsWith("[")) {
             logArray = g.fromJson(dataString, JsonArray.class);
             logNum = logArray.size();
@@ -139,20 +137,19 @@ public class LogMonitor extends JFrame implements ActionListener {
         HttpResponse response = httpClient.execute(request);
 
         // this string is the unparsed web page (=html source code)
-        String content = EntityUtils.toString(response.getEntity());
-        return content;
+        return EntityUtils.toString(response.getEntity());
     }
 
     private void createFilterSection() {
         JPanel filterPanel = new JPanel();
-        Dimension panelDim = new Dimension((int) Math.round(screenSize.width), (int) Math.round(screenSize.height*0.06));
+        Dimension panelDim = new Dimension(screenSize.width, (int) Math.round(screenSize.height*0.06));
         filterPanel.setPreferredSize(panelDim);
         filterPanel.setMinimumSize(panelDim);
         filterPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         /* Creating min level drop down menu and label */
         JLabel minLevelLabel = new JLabel("Min Level:");
         String[] levels = {"ALL", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "OFF"};
-        minLevel = new JComboBox(levels);
+        minLevel = new JComboBox<>(levels);
         /* Creating limit label and text field */
         JLabel limitLabel = new JLabel("Limit:");
         limitField = new JTextField("20");
